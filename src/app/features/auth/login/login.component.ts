@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [
     MatFormFieldModule,
     MatIconModule,
@@ -39,6 +40,7 @@ export class LoginComponent {
 
   private fb = inject(FormBuilder);
   private router = inject(Router);
+
 
     public ngOnInit(): void {
       console.log('test')
