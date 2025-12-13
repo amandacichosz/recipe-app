@@ -22,6 +22,8 @@ export class RecipesComponent {
   public form: UntypedFormGroup = new UntypedFormGroup({});
   public loading = true;
   public spinnerTimeout = setTimeout(() => this.loading = true, 150);
+  public quickFilters = ['breakfast', 'lunch', 'dinner', 'appetizer', 'dessert', 'other' ];
+
   private fb = inject(FormBuilder);
   private recipesService = inject(RecipesService);
   private destroyComponent$ = new Subject<void>();
@@ -42,7 +44,7 @@ export class RecipesComponent {
     this.destroyComponent$.complete();
   }
 
-  public quickFilters(event: any, tag: string): void {
+  public quickFilterChange(event: any, tag: string): void {
     const currentTags = this.form.get('tags')?.value as string[];
     if (currentTags.includes(tag)) {
       this.form.get('tags')?.setValue(currentTags.filter(t => t !== tag));
