@@ -3,7 +3,7 @@
   display: block;
   padding: var(--page-padding);
   box-sizing: border-box;
-  height: calc(100dvh - 48px);
+  height: calc(100dvh - calc(2 * var(--page-padding)));
 }
 
 .back-button {
@@ -15,8 +15,7 @@
   padding: 20px;
   display: flex;
   justify-content: stretch;
-  min-height: 100%;
-  background: var(--bg-color);
+  background: var(--mat-sys-surface-variant);
   border-radius: 16px;
   position: relative;
   box-sizing: border-box;
@@ -38,7 +37,7 @@
     border: 4px solid var(--mat-sys-primary);
     border-radius: 6px;
     width: 100%;
-    padding: 24px;
+    padding: var(--container-padding);
   }
 
   .recipe-card__title {
@@ -54,7 +53,6 @@
       font: var(--mat-sys-label-large);
     }
     h2 {
-      margin-bottom: -2px;
       font: var(--mat-sys-title-large);
     }
   }

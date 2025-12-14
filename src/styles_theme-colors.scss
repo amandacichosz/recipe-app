@@ -136,18 +136,13 @@ $_rest: (
 $primary-palette: map.merge(map.get($_palettes, primary), $_rest);
 $tertiary-palette: map.merge(map.get($_palettes, tertiary), $_rest);
 
-/* your generated palette variables here */
-// $theme: mat.define-theme((
-//   color: (
-//     theme-type: light,
-//     primary: $primary-palette,
-//     tertiary: $tertiary-palette,
-//   ),
-//   //typography: mat.define-typography-config(),
-//   //density: 0,
-// ));
-
-// // /* 1️⃣ Apply the theme to Material components */
-// :root {
-//   @include mat.all-component-themes($theme);
-// }
+html {
+  @include mat.theme((
+    color: (
+      primary: $primary-palette,
+      tertiary: $tertiary-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+}

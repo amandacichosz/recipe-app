@@ -1,1 +1,16 @@
 <p>add-recipe works!</p>
+<form class="recipe-form" [formGroup]="form">
+  <mat-form-field class="example-full-width">
+    <mat-label>Recipe Name</mat-label>
+    <input matInput placeholder="Ex. Pizza" formControlName="name">
+  </mat-form-field>
+
+  <mat-form-field>
+  <mat-label>Tags</mat-label>
+  <mat-select formControlName="tags" multiple>
+    @for (tag of tagsOptions; track tag) {
+      <mat-option [value]="tag">{{tag}}</mat-option>
+    }
+  </mat-select>
+</mat-form-field>
+</form>

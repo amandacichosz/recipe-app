@@ -2,7 +2,7 @@
 .recipes-header {
   text-align: center;
   padding: var(--page-padding);
-  background: linear-gradient(to right, #f9f6eb, #eddec3);
+  background: linear-gradient(to right, var(--mat-sys-surface), var(--mat-sys-surface-variant));
   border-bottom: 4px solid;
   border-image: linear-gradient(90deg, #982f37, #b8424a) 1;
 }
@@ -33,6 +33,7 @@ main {
   align-items: center;
 }
 
+//TODO make this better
 .search-input {
   width: 100%;
   box-sizing: border-box;
@@ -47,7 +48,7 @@ main {
 
 .search-input:focus {
   box-shadow: 0 0 6px rgba(152, 47, 55, 0.3);
-  border-color: #982f37;
+  border-color: var(--mat-sys-primary);
 }
 
 .filter-tags {
@@ -59,8 +60,8 @@ main {
 
 .filter-tag {
   background: transparent;
-  color: #982f37;
-  border: 1px solid #982f37;
+  color: var(--mat-sys-primary);
+  border: 1px solid var(--mat-sys-primary);
   border-radius: 16px;
   padding: 6px 14px;
   font-size: 0.8rem;
@@ -68,8 +69,8 @@ main {
   cursor: pointer;
   transition: transform 0.15s ease, opacity 0.15s ease;
   &.active {
-    background: linear-gradient(135deg, #982f37, #b8424a);
-    color: #eddec3;
+    background: linear-gradient(135deg, var(--mat-sys-primary), var(--mat-sys-primary));
+    color: var(--mat-sys-surface-variant);
 
   }
 }
@@ -88,7 +89,8 @@ main {
 }
 
 .recipe-card {
-  background-color: var(--bg-color);;
+  background-color: var(--mat-sys-surface-variant);
+  cursor: pointer;
 }
 
 .recipe-card-footer {
@@ -102,10 +104,10 @@ main {
   }
 }
 
-.recipe-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-}
+// .recipe-card:hover {
+//   transform: translateY(-6px);
+//   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+// }
 
 .recipe-chip {
   background: linear-gradient(135deg, #982f37, #b8424a);

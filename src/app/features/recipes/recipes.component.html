@@ -16,7 +16,7 @@
     @if (recipes$ | async; as recipes) {
       @if (recipes.length > 0) {
         @for (recipe of recipes; track recipe.id) {
-          <mat-card class="recipe-card" (click)="viewRecipe(recipe.id)">
+          <mat-card class="recipe-card" tabindex="0" (click)="viewRecipe(recipe.id)">
             <mat-card-header>
               <mat-card-title class="recipe-card-title">
                 {{ recipe.name | titlecase}}
