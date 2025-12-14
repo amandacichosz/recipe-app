@@ -3,24 +3,65 @@ import {
   Firestore,
   collection,
   collectionData,
+  docData,
+  doc,
   query,
   where,
 } from '@angular/fire/firestore';
 import { Query } from 'firebase/firestore/lite'
-import { Observable } from 'rxjs';
+import { Observable, of, shareReplay, take, tap } from 'rxjs';
 
 export interface Recipe {
   id: string;
-  title: string;
-  calories: number;
+  name: string;
+  direction: string[];
+  ingredients: string[];
+  tags: string[];
+  imageUrl: string;
 }
 
 @Injectable({ providedIn: 'root' })
 export class RecipesService {
+  private cache = new Map<string, Observable<Recipe[]>>();
+  private entityCache = new Map<string, Recipe>();
+
   private firestore = inject(Firestore);
 
 
-  getRecipes(searchTerm?: string, tags?: string[]): Observable<Recipe[]> {
+  public getRecipes(searchTerm?: string, tags?: string[]): Observable<Recipe[]> {
+    const key = JSON.stringify({ searchTerm, tags });
+    if (!this.cache.has(key)) {
+      this.cache.set(
+        key,
+        this.fetchRecipesFromFirestore(searchTerm, tags).pipe(
+          tap(recipes => recipes.map(r => this.entityCache.set(r.id, r))),
+          shareReplay(1)
+        )
+      );
+    }
+    return this.cache.get(key)!;
+  }
+
+  public getRecipeById(id: string): Observable<Recipe> {
+    const cached = this.entityCache.get(id);
+    if (cached) return of(cached);
+    const recipeRef = doc(this.firestore, `recipes/${id}`);
+    return docData(recipeRef, { idField: 'id' }).pipe(
+      take(1),
+      tap(recipe => {
+        if (recipe) {
+          this.entityCache.set(id, recipe as Recipe);
+        }
+      })
+    ) as Observable<any>;
+  }
+
+  public clearCache(): void {
+    this.cache.clear();
+    this.entityCache.clear();
+  }
+
+  private fetchRecipesFromFirestore(searchTerm?: string, tags?: string[]): Observable<Recipe[]> {
     const recipesRef = collection(this.firestore, 'recipes');
     const search = searchTerm?.toLowerCase().trim() || '';
     const tagList = Array.isArray(tags) ? tags.map(t => t) : [] as string[];
@@ -35,34 +76,49 @@ export class RecipesService {
 
     // Case 2: searchTerm only
     if (search && tagList.length === 0) {
-      console.log(`Fetching recipes with search term: ${search}`);
-      recipesQuery = query(
-        recipesRef,
-        where('name', '>=', search),
-        where('name', '<=', search + '\uf8ff')
-      );
+      console.log('search only')
+      recipesQuery = this.searchQuery(search);
     }
 
     // Case 3: tags only
     if (!search && tagList.length > 0) {
-      recipesQuery = query(
-        recipesRef,
-        where('tags', 'array-contains-any', tagList)
-      );
+      console.log('tags only')
+      recipesQuery = this.tagQuery(tagList);
     }
 
     // Case 4: both searchTerm and tags
     if (search && tagList.length > 0) {
-      console.log(`Fetching recipes with search term: ${search} and tags: ${tagList.join(', ')}`);
-      recipesQuery = query(
-        recipesRef,
-        where('name', '>=', search),
-        where('name', '<=', search + '\uf8ff'),
-        where('tags', 'array-contains-any', tagList)
-      );
+      console.log('both search and tags')
+      recipesQuery = this.searchAndTagQuery(search, tagList);
     }
 
     return collectionData(recipesQuery, { idField: 'id' }) as Observable<Recipe[]>;
+  }
 
+  private tagQuery(tagList: string[]): Query {
+    const recipesRef = collection(this.firestore, 'recipes');
+    return query(
+      recipesRef,
+      where('tags', 'array-contains-any', tagList)
+    );
+  }
+
+  private searchQuery(search: string): Query {
+    const recipesRef = collection(this.firestore, 'recipes');
+    return query(
+      recipesRef,
+      where('name', '>=', search),
+      where('name', '<=', search + '\uf8ff')
+    );
+  }
+
+  private searchAndTagQuery(search: string, tagList: string[]): Query {
+    const recipesRef = collection(this.firestore, 'recipes');
+    return query(
+      recipesRef,
+      where('name', '>=', search),
+      where('name', '<=', search + '\uf8ff'),
+      where('tags', 'array-contains-any', tagList)
+    );
   }
 }

@@ -6,18 +6,20 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatListModule } from '@angular/material/list';
 import { FormBuilder, UntypedFormGroup, ɵInternalFormsSharedModule, ReactiveFormsModule, FormArray } from '@angular/forms'
 import { distinctUntilChanged } from 'rxjs/internal/operators/distinctUntilChanged'
-import { debounceTime, Observable, Subject, switchMap, take, takeUntil } from 'rxjs'
+import { combineLatest, debounceTime, Observable, startWith, Subject, switchMap, take, takeUntil } from 'rxjs'
 import { SpinnerComponent } from '../../shared/spinner/spinner.component'
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-recipes',
   standalone: true,
-  imports: [ReactiveFormsModule, MatCardModule, MatChipsModule, MatListModule, ɵInternalFormsSharedModule, TitleCasePipe, SpinnerComponent],
+  imports: [CommonModule, ReactiveFormsModule, MatCardModule, MatChipsModule, MatListModule, ɵInternalFormsSharedModule, TitleCasePipe, SpinnerComponent],
   templateUrl: './recipes.component.html',
   styleUrl: './recipes.component.scss'
 })
 export class RecipesComponent {
-  public recipes: any
+
+  public recipes$!: Observable<any>;
 
   public form: UntypedFormGroup = new UntypedFormGroup({});
   public loading = true;
@@ -26,22 +28,42 @@ export class RecipesComponent {
 
   private fb = inject(FormBuilder);
   private recipesService = inject(RecipesService);
+  private router = inject(Router);
   private destroyComponent$ = new Subject<void>();
+
 
   public ngOnInit(): void {
     this.createForm();
-    this.initQueryStream();
-    //this.initFilterStream();
-    this.recipesService.getRecipes().subscribe((recipes) => {
-      clearTimeout(this.spinnerTimeout);
-      this.recipes = recipes;
-      this.loading = false;
-    });
+    this.initStream();
+  }
+
+  public initStream(): void {
+    const query$ = this.form.get('query')?.valueChanges.pipe(
+      startWith(this.form.get('query')?.value),
+      debounceTime(300),
+      distinctUntilChanged(),
+    ) as Observable<string>;
+
+    const tags$ = this.form.get('tags')?.valueChanges.pipe(
+      startWith(this.form.get('tags')?.value),
+      debounceTime(300),
+      distinctUntilChanged((a, b) => this.deepCompare(a, b))
+    ) as Observable<string[]>;
+
+    this.recipes$ = combineLatest([query$, tags$]).pipe(
+      takeUntil(this.destroyComponent$),
+      switchMap(([searchTerm, tags]) => this.getRecipies(searchTerm, tags)),
+    );
   }
 
   public ngOnDestroy(): void {
     this.destroyComponent$.next();
     this.destroyComponent$.complete();
+  }
+
+  public viewRecipe(id: string): void {
+    console.log('View recipe', id);
+    this.router.navigate(['/recipe', id]);
   }
 
   public quickFilterChange(event: any, tag: string): void {
@@ -64,55 +86,23 @@ export class RecipesComponent {
     el.classList.remove('active');
   }
 
-  private initQueryStream(): void {
-    this.form.get('query')?.valueChanges.pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      takeUntil(this.destroyComponent$),
-      switchMap((searchTerm: string) => this.getRecipies(searchTerm, this.getTags())),
-    ).subscribe((recipes) => {
-      clearTimeout(this.spinnerTimeout);
-      this.recipes = recipes;
-      this.loading = false;
-    });
-  }
-
-  private initFilterStream(): void {
-    this.form.get('tags')?.valueChanges.pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      takeUntil(this.destroyComponent$),
-      switchMap((tags: string[]) => this.getRecipies(this.getQuery(), tags)),
-    ).subscribe((recipes) => {
-      clearTimeout(this.spinnerTimeout);
-      this.recipes = recipes;
-      this.loading = false;
-    });
-  }
-
 
   private getRecipies(search?: string, tags?: string[]): Observable<any> {
-    this.spinnerTimeout
     const searchTerm = search ? search : this.form.get('search')?.value;
     const filteredTags = tags && tags.length > 0 ? tags : this.form.get('tags')?.value;
-
+    console.log('Fetching recipes with', { searchTerm, filteredTags });
     return this.recipesService.getRecipes(searchTerm, filteredTags);
   }
-
-  private getTags(): string[] {
-    return this.form.get('tags')?.value || [];
-  }
-
-  private getQuery(): string {
-    return this.form.get('query')?.value || '';
-  }
-
 
   private createForm(): void {
     this.form = this.fb.group({
       query: [''],
       tags: [[]]
     });
+  }
+
+  private deepCompare(a: any, b: any): boolean {
+    return a.length === b.length && [...a].sort().every((v, i ) => v === [...b].sort()[i]);
   }
 
 }

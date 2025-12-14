@@ -1,0 +1,37 @@
+<button routerLink="/recipes" class="back-button">
+  <span class="arrow">&#8592;</span>
+  Back
+</button>
+@if (recipe$ | async; as recipe) {
+  <div class="recipe-card">
+    <div class="recipe-card--border-title">RECIPES</div>
+    <div class="recipe-card--border">
+      <div class="recipe-card__title">
+        <span>RECIPE:</span>
+        <h2>{{ recipe.name | titlecase}}</h2>
+      </div>
+      <div class="recipe-card__ingredients">
+        <h3>Ingredients</h3>
+        <ul>
+          @for (ingredient of recipe.ingredients; track ingredient) {
+            <li>
+              {{ ingredient }}
+            </li>
+          }
+        </ul>
+      </div>
+      <div class="recipe-card__directions">
+        <h3>Directions</h3>
+        <ol>
+          @for (direction of recipe.directions; track direction) {
+            <li>
+              {{ direction }}
+            </li>
+          }
+        </ol>
+      </div>
+    </div>
+  </div>
+} @else {
+  <p>Loading recipe...</p>
+}
