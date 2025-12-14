@@ -1,13 +1,16 @@
 import { Component, inject } from '@angular/core';
-import { RecipesService } from '../../core/recipes/recipes.service'
-import { ActivatedRoute, RouterModule } from '@angular/router'
-import { Observable } from 'rxjs'
-import { CommonModule } from '@angular/common'
+import { RecipesService } from '../../core/recipes/recipes.service';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { Observable } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
+import { SpinnerComponent } from '../../shared/spinner/spinner.component'
 
 @Component({
   selector: 'app-recipe',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, MatButtonModule, MatDividerModule, SpinnerComponent],
   templateUrl: './recipe.component.html',
   styleUrl: './recipe.component.scss'
 })

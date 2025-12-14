@@ -16,7 +16,23 @@
     @if (recipes$ | async; as recipes) {
       @if (recipes.length > 0) {
         @for (recipe of recipes; track recipe.id) {
-        <div class="recipe-card" (click)="viewRecipe(recipe.id)">
+          <mat-card class="recipe-card" (click)="viewRecipe(recipe.id)">
+            <mat-card-header>
+              <mat-card-title class="recipe-card-title">
+                {{ recipe.name | titlecase}}
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+            </mat-card-content>
+            <mat-card-footer class="recipe-card-footer">
+              <mat-chip-set aria-label="Recipe Tags">
+                @for (tag of recipe?.tags; track tag) {
+                  <mat-basic-chip class="recipe-chip">{{ tag }}</mat-basic-chip>
+                }
+              </mat-chip-set>
+            </mat-card-footer>
+        </mat-card>
+        <!-- <div class="recipe-card" (click)="viewRecipe(recipe.id)">
           <div class="recipe-content">
             <h3 class="recipe-title">{{ recipe.name | titlecase}}</h3>
             <div class="recipe-tags">
@@ -25,7 +41,7 @@
               }
             </div>
           </div>
-        </div>
+        </div> -->
       }
       } @else {
         <div class="empty-state">

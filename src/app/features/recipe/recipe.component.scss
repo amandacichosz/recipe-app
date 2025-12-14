@@ -1,48 +1,22 @@
 
 :host {
   display: block;
-  padding: 24px;
-  background: #f5f1e6;
+  padding: var(--page-padding);
   box-sizing: border-box;
   height: calc(100dvh - 48px);
 }
 
 .back-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
   margin-bottom: 8px;
-  padding: 8px 16px;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #982f37;
-  background-color: #eddec3;
-  border: 2px solid #982f37;
-  border-radius: 24px;
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
-}
-
-.back-button .arrow {
-  font-size: 1.2rem;
-  transition: transform 0.2s ease;
-}
-
-.back-button:hover {
-  background: linear-gradient(135deg, #982f37, #b8424a);
-  color: #eddec3;
-}
-
-.back-button:hover .arrow {
-  transform: translateX(-3px);
+  margin-top: -12px;
 }
 
 .recipe-card {
   padding: 20px;
   display: flex;
   justify-content: stretch;
-  height: 100%;
-  background: #eddec3;
+  min-height: 100%;
+  background: var(--bg-color);
   border-radius: 16px;
   position: relative;
   box-sizing: border-box;
@@ -61,7 +35,7 @@
   }
 
   .recipe-card--border {
-    border: 4px solid #982f37;
+    border: 4px solid var(--mat-sys-primary);
     border-radius: 6px;
     width: 100%;
     padding: 24px;
@@ -71,14 +45,17 @@
     display: flex;
     gap: 8px;
     align-items: flex-end;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid var(--mat-sys-neutral-variant20);
     padding-bottom: 4px;
-    h2 {
-      margin: 0;
-      margin-bottom: -2px;
-      font-size: 1.5em;
+
+    .title-label {
+      text-transform: uppercase;
       font-weight: 600;
-      color: #982f37;
+      font: var(--mat-sys-label-large);
+    }
+    h2 {
+      margin-bottom: -2px;
+      font: var(--mat-sys-title-large);
     }
   }
 

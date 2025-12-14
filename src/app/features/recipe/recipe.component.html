@@ -1,16 +1,18 @@
-<button routerLink="/recipes" class="back-button">
-  <span class="arrow">&#8592;</span>
-  Back
+
+<button class="back-button" routerLink="/recipes" mat-stroked-button>
+  <span class="arrow">&#8592; </span>
+  <span>Back</span>
 </button>
+
 @if (recipe$ | async; as recipe) {
   <div class="recipe-card">
     <div class="recipe-card--border-title">RECIPES</div>
     <div class="recipe-card--border">
       <div class="recipe-card__title">
-        <span>RECIPE:</span>
+        <span class="alt-text title-label">RECIPE:</span>
         <h2>{{ recipe.name | titlecase}}</h2>
       </div>
-      <div class="recipe-card__ingredients">
+      <div class="recipe-card__ingredients alt-text">
         <h3>Ingredients</h3>
         <ul>
           @for (ingredient of recipe.ingredients; track ingredient) {
@@ -20,7 +22,7 @@
           }
         </ul>
       </div>
-      <div class="recipe-card__directions">
+      <div class="recipe-card__directions alt-text">
         <h3>Directions</h3>
         <ol>
           @for (direction of recipe.directions; track direction) {
@@ -33,5 +35,5 @@
     </div>
   </div>
 } @else {
-  <p>Loading recipe...</p>
+  <app-spinner></app-spinner>
 }

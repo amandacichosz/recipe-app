@@ -1,5 +1,8 @@
 @use '@angular/material' as mat;
+@use './styles_theme-colors.scss' as my-theme;
 /* You can add global styles to this file, and also import other style files */
+
+
 
 // breakpoints
 $bp-xs: 0;
@@ -8,18 +11,41 @@ $bp-md: 960px;
 $bp-lg: 1280px;
 $bp-xl: 1920px;
 
-html, body { height: 100%; }
-body { margin: 0; font-family: sans-serif, Roboto, "Helvetica Neue"; }
-h2 { margin: 0; }
 
-// html {
-//   color-scheme: light dark;
-//   @include mat.theme((
-//     color: mat.$cyan-palette,
-//     typography: Roboto,
-//     density: 0
-//   ));
-// }
+:root {
+  --mat-font-family: 'Roboto', sans-serif;
+  --page-padding: 24px;
+
+  --fg-color: #f6f5f2;
+  --bg-color: #eddec3;
+
+  @media (max-width: $bp-sm) {
+    --page-padding: 16px;
+  }
+}
+
+html {
+  @include mat.theme((
+    color: (
+      primary: my-theme.$primary-palette,
+      tertiary: my-theme.$tertiary-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+
+}
+
+html, body {
+  height: 100%;
+  font-family: var(--mat-font-family, sans-serif);
+  color: var(--mat-sys-primary);
+}
+body { margin: 0; }
+h2 { margin: 0; }
+h3 { margin: 24px 0 16px 0; }
+
+
 // Customize the entire app. Change :root to your selector if you want to scope the styles.
 // :root {
 //   @include mat.form-field-overrides((
@@ -29,7 +55,12 @@ h2 { margin: 0; }
 // }
 
 body {
-  background-color: #f7f4ea;
+  background-color: var(--fg-color);
+}
+
+/* Custom Classes */
+.alt-text {
+  color: var(--mat-sys-neutral-variant20);
 }
 
 // // X-Small devices (portrait phones, less than 576px)
