@@ -16,12 +16,13 @@ jobs:
           node-version: '20.18'
       - uses: actions/cache@v3
         with:
-          path: ~/.yarn
+          path: |
+            ~/.yarn
+            .yarn/cache
+            .yarn/unplugged
           key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
-
       - run: yarn install --frozen-lockfile
-      - run: yarn build
-      - run: yarn firebase deploy --only hosting --token ${{ secrets.FIREBASE_TOKEN }}
+      - run: yarn ng build --configuration production
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
