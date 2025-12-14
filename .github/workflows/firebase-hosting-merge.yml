@@ -21,7 +21,7 @@ jobs:
 
       - run: yarn install --frozen-lockfile
       - run: yarn build
-      - run: npx firebase deploy --only hosting --token ${{ secrets.FIREBASE_TOKEN }}
+      - run: yarn firebase deploy --only hosting --token ${{ secrets.FIREBASE_TOKEN }}
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
