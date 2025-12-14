@@ -43,6 +43,7 @@
           "configurations": {
             "production": {
               "optimization": true,
+              "extractLicenses": true,
               "outputHashing": "all",
               "sourceMap": false ,
               "budgets": [
