@@ -78,8 +78,14 @@ h3 { margin: 24px 0 16px 0; }
   }
 }
 
-.cdk-dialog-container {
-  border-radius: 24px;
+
+@media (max-width: 600px) {
+  :host {
+    border-radius: 0;
+  }
+  .cdk-dialog-container {
+    border-radius: 0;
+  }
 }
 
 

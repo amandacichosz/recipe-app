@@ -38,10 +38,13 @@ export class RecipeComponent {
 
   public editRecipe(): void {
     console.log('Edit recipe clicked');
+    const isMobile = window.matchMedia('(max-width: 600px)').matches;
     const ref = this.dialog.open(AddEditRecipeComponent, {
       data: { title: 'Edit Recipe' },
-      height: '400px',
-      width: '600px',
+      width: isMobile ? '100vw' : '92vw',
+      height: isMobile ? '100dvh' : '88vh',
+      maxWidth: isMobile ? '100vw' : '1100px',
+      maxHeight: isMobile ? '100dvh' : '900px',
     });
     console.log('ref', ref)
 

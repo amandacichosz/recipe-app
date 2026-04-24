@@ -24,7 +24,7 @@
           </div>
 
           <div class="ingredient-list">
-            @for (ingredient of ingredients.controls; track $index) {
+            @for (ingredient of ingredients.controls; track ingredient) {
               <div class="ingredient-row">
                 <mat-form-field class="ingredient-field">
                   <mat-label>Ingredient {{ $index + 1 }}</mat-label>
@@ -56,7 +56,7 @@
           </div>
 
           <div class="ingredient-list">
-            @for (direction of directions.controls; track $index) {
+            @for (direction of directions.controls; track direction) {
               <div class="ingredient-row">
                 <mat-form-field class="ingredient-field">
                   <mat-label>Step {{ $index + 1 }}</mat-label>

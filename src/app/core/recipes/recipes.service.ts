@@ -1,15 +1,16 @@
 import { Injectable, inject } from '@angular/core';
 import {
   Firestore,
+  addDoc,
   collection,
   collectionData,
   docData,
   doc,
+  Query,
   query,
   where,
 } from '@angular/fire/firestore';
-import { Query } from 'firebase/firestore/lite'
-import { Observable, of, shareReplay, take, tap } from 'rxjs';
+import { from, Observable, of, shareReplay, take, tap } from 'rxjs';
 
 export interface Recipe {
   id: string;
@@ -42,6 +43,16 @@ export class RecipesService {
     return this.cache.get(key)!;
   }
 
+  public createRecipe(recipe: Recipe): Observable<any> {
+    const recipesRef = collection(this.firestore, 'recipes');
+    return from(addDoc(recipesRef, recipe)).pipe(
+      tap(() => {
+        this.cache.clear();
+        this.entityCache.clear();
+      })
+    )
+  }
+
   public getRecipeById(id: string): Observable<Recipe> {
     const cached = this.entityCache.get(id);
     if (cached) return of(cached);
@@ -68,7 +79,7 @@ export class RecipesService {
 
     // Case 1: no searchTerm and no tags → return all
     if (!search && tagList.length === 0) {
-      console.log('Fetching all recipes');
+      console.log('Fetching all recipes', collectionData(recipesRef, { idField: 'id' }));
       return collectionData(recipesRef, { idField: 'id' }) as Observable<Recipe[]>;
     }
 

@@ -7,6 +7,7 @@ import {MatButtonModule} from '@angular/material/button'
 import { MatDialogModule } from '@angular/material/dialog';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog'
 import { MatIconModule } from '@angular/material/icon';
+import { RecipesService } from '../../core/recipes/recipes.service'
 
 @Component({
   selector: 'app-add-recipe',
@@ -21,8 +22,10 @@ export class AddEditRecipeComponent {
   public tagsOptions = ['Breakfast', 'Lunch', 'Dinner', 'Dessert', 'Appetizer', 'Other'];
   public title!: string;
 
-  private fb = inject(FormBuilder)
+  private fb = inject(FormBuilder);
   private elementRef = inject(ElementRef<HTMLElement>);
+  private recipeService = inject(RecipesService);
+
 
   // readonly dialogRef = inject(MatDialogRef<AddEditRecipeComponent>);
   constructor(
@@ -39,7 +42,6 @@ export class AddEditRecipeComponent {
   }
 
   public onCancel(): void {
-    console.log('Closing dialog', this.dialogRef, this.data);
     this.dialogRef.close();
   }
 
@@ -62,12 +64,23 @@ export class AddEditRecipeComponent {
       ingredients: ingredientValues,
       directions: directionValues
     });
+
+    this.recipeService.createRecipe({
+      ...this.form.value,
+      ingredients: ingredientValues,
+      directions: directionValues
+    }).subscribe({
+      next: (res) => {
+        console.log('saved', res)
+        this.dialogRef.close()
+      },
+      error: (error) => console.error('Error saving recipe', error)
+    });
   }
 
   public ngOnInit(): void {
     this.form = this.fb.group({
       name: ['', Validators.required],
-      description: [''],
       ingredients: this.fb.array([this.createIngredientControl()]),
       directions: this.fb.array([this.createDirectionControl()]),
       tags: [[]]
