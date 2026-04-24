@@ -1,23 +1,36 @@
 /* Header */
 .recipes-header {
   text-align: center;
-  padding: var(--page-padding);
-  background: linear-gradient(to right, var(--mat-sys-surface), var(--mat-sys-surface-variant));
-  border-bottom: 4px solid;
-  border-image: linear-gradient(90deg, #982f37, #b8424a) 1;
+  padding: 24px;
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top center, rgba(255, 255, 255, 0.96), transparent 58%),
+    linear-gradient(120deg, var(--app-header-start) 0%, var(--app-header-mid) 52%, var(--app-header-end) 100%);
+  border-bottom: 1px solid rgba(175, 49, 49, 0.08);
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0;
+    height: 5px;
+    background: linear-gradient(90deg, rgba(175, 49, 49, 0.08), rgba(175, 49, 49, 0.5), rgba(175, 49, 49, 0.14));
+  }
 }
 
 .header-title {
   font-family: var(--mat-font-family);
-  font: 600 2.5rem 'Roboto', sans-serif;
-  margin: 0 0 12px 0;
+  font: 700 clamp(2.4rem, 5vw, 3.75rem) 'Roboto', sans-serif;
+  letter-spacing: -0.04em;
+  margin: 0 0 0.75rem 0;
+  color: var(--app-accent-strong);
 }
 
 .header-subtitle {
   font: 400 1.1rem 'Roboto', sans-serif;
   font-weight: 500;
-  color: var(--mat-sys-primary);
-  opacity: 0.85;
+  color: var(--app-muted);
   margin: 0;
 }
 
@@ -25,72 +38,122 @@ main {
   padding: var(--page-padding);
 }
 
-/* Quick Filters */
-.quick-filters {
+/* Toolbar */
+
+.toolbar {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0 8px;
+  gap: 24px;
+}
+/* Search */
+.search {
+  display: flex;
   gap: 12px;
   align-items: center;
-}
+  flex: 1 0 auto;
+  justify-content: space-between;
 
-//TODO make this better
-.search-input {
-  width: 100%;
-  box-sizing: border-box;
-  max-width: 400px;
-  padding: 10px 16px;
-  border-radius: 24px;
-  border: 1px solid #ddd;
-  font-size: 1rem;
-  outline: none;
-  transition: box-shadow 0.2s ease;
-}
+  & .search-input {
+    display: flex;
+    flex: 1;
+    box-sizing: border-box;
+    padding: 14px 18px;
+    border-radius: 999px;
+    border: 1px solid var(--app-outline);
+    font-size: 1rem;
+    color: var(--app-ink);
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
 
-.search-input:focus {
-  box-shadow: 0 0 6px rgba(152, 47, 55, 0.3);
-  border-color: var(--mat-sys-primary);
-}
+    &::placeholder {
+      color: rgba(108, 99, 93, 0.7);
+    }
 
-.filter-tags {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.filter-tag {
-  background: transparent;
-  color: var(--mat-sys-primary);
-  border: 1px solid var(--mat-sys-primary);
-  border-radius: 16px;
-  padding: 6px 14px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.15s ease, opacity 0.15s ease;
-  &.active {
-    background: linear-gradient(135deg, var(--mat-sys-primary), var(--mat-sys-primary));
-    color: var(--mat-sys-surface-variant);
-
+    &:hover,
+    &:focus {
+      border-color: rgba(175, 49, 49, 0.28);
+      background: #ffffff;
+      outline: none;
+    }
   }
 }
 
-.filter-tag:hover {
-  transform: translateY(-2px);
-  opacity: 0.9;
+.actions {
+  display: flex;
+  gap: 8px;
 }
+
+.filter-more {
+  position: relative;
+}
+
+.filter-count-dot {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #af3131, #cf4948);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 0 0 2px #fff;
+}
+
+.filter-menu {
+  position: relative;
+  min-width: 245px;
+  padding: 16px;
+}
+
+.example-section {
+  padding-top: 0;
+}
+
+.filter-menu-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+
+  button {
+    width: 100%;
+  }
+}
+
 
 /* Recipe Cards Grid */
 .recipe-card-grid {
   display: grid;
   padding: 24px 0;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 1em;
+  gap: 1.25rem;
 }
 
 .recipe-card {
-  background-color: var(--mat-sys-surface-variant);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(249, 245, 241, 0.96));
   cursor: pointer;
+  border: 1px solid rgba(34, 31, 28, 0.08);
+  border-radius: 24px;
+  box-shadow: var(--app-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    border-color: rgba(175, 49, 49, 0.18);
+    box-shadow: 0 22px 44px rgba(34, 31, 28, 0.12);
+  }
 }
 
 .recipe-card-footer {
@@ -110,8 +173,8 @@ main {
 // }
 
 .recipe-chip {
-  background: linear-gradient(135deg, #982f37, #b8424a);
-  color: #eddec3;
+  background: linear-gradient(135deg, #af3131, #cf4948);
+  color: #fff;
   padding: 5px 12px;
   border-radius: 12px;
   font-size: 0.75rem;
@@ -130,6 +193,10 @@ main {
   color: var(--mat-sys-primary);
   text-align: center;
   gap: 16px;
+  background: rgba(255, 255, 255, 0.74);
+  border: 1px solid rgba(34, 31, 28, 0.08);
+  border-radius: 24px;
+  box-shadow: var(--app-shadow);
 }
 
 .empty-state h2 {
@@ -144,29 +211,33 @@ main {
   max-width: 400px;
 }
 
-.add-recipe-btn {
-  background: linear-gradient(135deg, #982f37, #b8424a);
-  color: #eddec3;
-  border: none;
-  border-radius: 20px;
-  padding: 10px 24px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.2s ease, opacity 0.2s ease;
-}
 
-.add-recipe-btn:hover {
-  transform: translateY(-2px);
-  opacity: 0.9;
-}
+
+// .add-recipe-btn:hover {
+//   transform: translateY(-2px);
+//   opacity: 0.9;
+// }
 
 @media (max-width: 600px) {
+  .recipes-header {
+    padding: 16px;
+  }
+
   main {
     padding: 16px;
   }
+
   .recipe-card-grid {
     grid-template-columns: 1fr;
     padding: 16px 0;
+  }
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .actions {
+    justify-content: flex-end;
   }
 }

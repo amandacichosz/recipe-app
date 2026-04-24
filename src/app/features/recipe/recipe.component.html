@@ -4,6 +4,11 @@
   <span>Back</span>
 </button>
 
+<button (click)="editRecipe()" class="edit-button" mat-stroked-button>
+  <span class="edit-icon">&#9998; </span>
+  <span>Edit Recipe</span>
+</button>
+
 @if (recipe$ | async; as recipe) {
   <div class="recipe-card">
     <div class="recipe-card--border-title">RECIPES</div>

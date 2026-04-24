@@ -5,6 +5,6 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'recipes', loadComponent: () => import('./features/recipes/recipes.component').then(m => m.RecipesComponent) },
   { path: 'recipe/:id', loadComponent: () => import('./features/recipe/recipe.component').then(m => m.RecipeComponent) },
-  { path: 'add-recipe', loadComponent: () => import('./features/add-recipe/add-recipe.component').then(m => m.AddRecipeComponent) },
+  { path: 'add-recipe', loadComponent: () => import('./features/add-edit-recipe/add-edit-recipe.component').then(m => m.AddEditRecipeComponent) },
   { path: '', redirectTo: 'recipes', pathMatch: 'full' }
 ];

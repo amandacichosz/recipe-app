@@ -8,6 +8,7 @@ import { provideRouter } from '@angular/router'
 import { provideAuth } from '@angular/fire/auth'
 import { getAuth } from 'firebase/auth'
 
+
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
@@ -16,3 +17,4 @@ bootstrapApplication(AppComponent, {
     provideFirestore(() => getFirestore()),
   ],
 })
+

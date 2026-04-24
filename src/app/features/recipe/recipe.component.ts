@@ -6,6 +6,8 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { SpinnerComponent } from '../../shared/spinner/spinner.component'
+import { AddEditRecipeComponent } from '../add-edit-recipe/add-edit-recipe.component'
+import { Dialog } from '@angular/cdk/dialog'
 
 @Component({
   selector: 'app-recipe',
@@ -20,6 +22,7 @@ export class RecipeComponent {
   public recipe$!: Observable<any>;
   private recipeService = inject(RecipesService);
   private route = inject(ActivatedRoute);
+  private dialog = inject(Dialog);
 
   public ngOnInit(): void {
     console.log('RecipeComponent initialized');
@@ -31,6 +34,24 @@ export class RecipeComponent {
     // this.recipeService.getRecipeById('some-id').subscribe(recipe => {
     //   console.log('Fetched recipe:', recipe);
     // });
+  }
+
+  public editRecipe(): void {
+    console.log('Edit recipe clicked');
+    const ref = this.dialog.open(AddEditRecipeComponent, {
+      data: { title: 'Edit Recipe' },
+      height: '400px',
+      width: '600px',
+    });
+    console.log('ref', ref)
+
+    // Navigate to the edit recipe page
+    // ref.closed.subscribe(result => {
+    //   console.log('Dialog closed with result:', result);
+    //   ref.close();
+    // });
+
+
   }
 
 }

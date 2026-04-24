@@ -1,0 +1,90 @@
+<div class="cdk-dialog-container">
+  <div class="dialog-content">
+    <h2 mat-dialog-title>{{ data.title }}</h2>
+    <mat-dialog-content class="mat-typography">
+      <form class="recipe-form" [formGroup]="form">
+        <mat-form-field class="example-full-width">
+          <mat-label>Recipe Name</mat-label>
+          <input matInput placeholder="Ex. Pizza" formControlName="name">
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Tags</mat-label>
+          <mat-select formControlName="tags" multiple>
+            @for (tag of tagsOptions; track tag) {
+              <mat-option [value]="tag">{{tag}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <section class="recipe-section" formArrayName="ingredients">
+          <div class="section-heading">
+            <h3>Ingredients</h3>
+            <p>Add each ingredient on its own line.</p>
+          </div>
+
+          <div class="ingredient-list">
+            @for (ingredient of ingredients.controls; track $index) {
+              <div class="ingredient-row">
+                <mat-form-field class="ingredient-field">
+                  <mat-label>Ingredient {{ $index + 1 }}</mat-label>
+                  <input
+                    matInput
+                    [formControlName]="$index"
+                    placeholder="Ex. 1 cup flour"
+                    (input)="onIngredientInput($index)">
+                </mat-form-field>
+
+                @if (shouldShowRemoveIngredient($index)) {
+                  <button
+                    type="button"
+                    class="ingredient-remove app-icon-button"
+                    (click)="removeIngredient($index)"
+                    aria-label="Remove ingredient">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                }
+              </div>
+            }
+          </div>
+        </section>
+
+        <section class="recipe-section" formArrayName="directions">
+          <div class="section-heading">
+            <h3>Directions</h3>
+            <p>Add each step on its own line.</p>
+          </div>
+
+          <div class="ingredient-list">
+            @for (direction of directions.controls; track $index) {
+              <div class="ingredient-row">
+                <mat-form-field class="ingredient-field">
+                  <mat-label>Step {{ $index + 1 }}</mat-label>
+                  <input
+                    matInput
+                    [formControlName]="$index"
+                    placeholder="Ex. Mix ingredients together"
+                    (input)="onDirectionInput($index)">
+                </mat-form-field>
+
+                @if (shouldShowRemoveDirection($index)) {
+                  <button
+                    type="button"
+                    class="ingredient-remove app-icon-button"
+                    (click)="removeDirection($index)"
+                    aria-label="Remove direction">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                }
+              </div>
+            }
+          </div>
+        </section>
+      </form>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button (click)="onCancel()">Cancel</button>
+      <button mat-flat-button color="primary" (click)="onSave()" cdkFocusInitial>Save</button>
+    </mat-dialog-actions>
+  </div>
+</div>
