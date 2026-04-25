@@ -1,196 +1,169 @@
-import { Component, ElementRef, Inject, inject } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Inject, inject, Output } from '@angular/core'
 import { FormArray, FormBuilder, FormsModule, ReactiveFormsModule, UntypedFormGroup, Validators } from '@angular/forms'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
 import { MatSelectModule } from '@angular/material/select'
 import {MatButtonModule} from '@angular/material/button'
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog'
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog'
-import { MatIconModule } from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon'
 import { RecipesService } from '../../core/recipes/recipes.service'
+import { Observable } from 'rxjs'
 
 @Component({
   selector: 'app-add-recipe',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatButtonModule, MatDialogModule, MatIconModule],
+  imports: [
+    ReactiveFormsModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatIconModule
+  ],
   templateUrl: './add-edit-recipe.component.html',
   styleUrl: './add-edit-recipe.component.scss'
 })
 export class AddEditRecipeComponent {
 
-  public form!: UntypedFormGroup;
-  public tagsOptions = ['Breakfast', 'Lunch', 'Dinner', 'Dessert', 'Appetizer', 'Other'];
-  public title!: string;
+  public form!: UntypedFormGroup
+  public tagsOptions = ['Breakfast', 'Lunch', 'Dinner', 'Dessert', 'Appetizer', 'Other']
+  public title!: string
 
-  private fb = inject(FormBuilder);
-  private elementRef = inject(ElementRef<HTMLElement>);
-  private recipeService = inject(RecipesService);
+  @Output() public saved = new EventEmitter<any>()
+  private fb = inject(FormBuilder)
+  private elementRef = inject(ElementRef<HTMLElement>)
+  private recipeService = inject(RecipesService)
 
 
-  // readonly dialogRef = inject(MatDialogRef<AddEditRecipeComponent>);
   constructor(
     public dialogRef: DialogRef<AddEditRecipeComponent>,
     @Inject(DIALOG_DATA) public data: any
   ) {}
 
   public get ingredients(): FormArray {
-    return this.form.get('ingredients') as FormArray;
+    return this.form.get('ingredients') as FormArray
   }
 
   public get directions(): FormArray {
-    return this.form.get('directions') as FormArray;
+    return this.form.get('directions') as FormArray
   }
 
   public onCancel(): void {
-    this.dialogRef.close();
+    this.dialogRef.close()
   }
 
   public onSave(): void {
     if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      queueMicrotask(() => this.focusFirstInvalidControl());
-      return;
+      this.form.markAllAsTouched()
+      queueMicrotask(() => this.focusFirstInvalidControl())
+      return
     }
 
-    const ingredientValues = this.ingredients.controls
-      .map((control) => `${control.value ?? ''}`.trim())
-      .filter(Boolean);
-    const directionValues = this.directions.controls
-      .map((control) => `${control.value ?? ''}`.trim())
-      .filter(Boolean);
-
-    console.log('Saving recipe', {
+    const params = {
       ...this.form.value,
-      ingredients: ingredientValues,
-      directions: directionValues
-    });
+      ingredients: this.trimValues(this.ingredients),
+      directions: this.trimValues(this.directions)
+    }
 
-    this.recipeService.createRecipe({
-      ...this.form.value,
-      ingredients: ingredientValues,
-      directions: directionValues
-    }).subscribe({
+    const response = this.data.id ? this.updateRecipe(this.data.id, params) : this.createRecipe(params)
+
+    response.subscribe({
       next: (res) => {
         console.log('saved', res)
+        this.saved.emit(params)
         this.dialogRef.close()
       },
       error: (error) => console.error('Error saving recipe', error)
-    });
+    })
   }
+
+  private trimValues(array: FormArray): any[] {
+    return array.controls.map((c) => `${c.value ?? ''}`.trim()).filter(Boolean)
+  }
+
+  private createRecipe(params: any): Observable<any> {
+    return this.recipeService.createRecipe(params)
+  }
+
+  private updateRecipe(id: string, params: any): Observable<any> {
+    return this.recipeService.updateRecipe(id, params)
+  }
+
 
   public ngOnInit(): void {
+    const { ingredients, directions } = this.data || {}
+    const ingredientControls = ingredients?.map((i: string) => this.createFormControl(i)) || []
+    ingredientControls.push(this.createFormControl())
+    const directionControls = directions?.map((d: string) => this.createFormControl(d)) || []
+    directionControls.push(this.createFormControl())
+
     this.form = this.fb.group({
-      name: ['', Validators.required],
-      ingredients: this.fb.array([this.createIngredientControl()]),
-      directions: this.fb.array([this.createDirectionControl()]),
-      tags: [[]]
-    });
+      name: [this.data.name || '', Validators.required],
+      ingredients: this.fb.array([...ingredientControls]),
+      directions: this.fb.array([...directionControls]),
+      tags: [this.data.tags || []]
+    })
+    console.log(this.form)
   }
 
-  public onIngredientInput(index: number): void {
-    const control = this.ingredients.at(index);
-    const value = `${control.value ?? ''}`.trim();
-    const isLastRow = index === this.ingredients.length - 1;
+  public shouldRemoveControl(array: FormArray, index: number): boolean {
+    const value = `${array.at(index)?.value ?? ''}`.trim()
+    return !!value
+  }
+
+  public onInput(array: FormArray, index: number): void {
+    const control = array.at(index)
+    const value = `${control.value ?? ''}`.trim()
+    const isLastRow = index === array.length - 1
 
     if (isLastRow && value) {
-      this.ingredients.push(this.createIngredientControl());
+      array.push(this.createFormControl())
     }
 
-    this.ensureSingleEmptyIngredientRow();
+    this.ensureSingleEmptyRow(array)
   }
 
-  public removeIngredient(index: number): void {
-    if (this.ingredients.length === 1) {
-      this.ingredients.at(0).setValue('');
-      return;
+  public removeControl(array: FormArray, index: number): void {
+    if (array.length === 1) {
+      array.at(0).setValue('')
+      return
     }
 
-    this.ingredients.removeAt(index);
-    this.ensureSingleEmptyIngredientRow();
+    array.removeAt(index)
+    this.ensureSingleEmptyRow(array)
   }
 
-  public shouldShowRemoveIngredient(index: number): boolean {
-    const value = `${this.ingredients.at(index)?.value ?? ''}`.trim();
-    return !!value;
-  }
-
-  public onDirectionInput(index: number): void {
-    const control = this.directions.at(index);
-    const value = `${control.value ?? ''}`.trim();
-    const isLastRow = index === this.directions.length - 1;
-
-    if (isLastRow && value) {
-      this.directions.push(this.createDirectionControl());
-    }
-
-    this.ensureSingleEmptyDirectionRow();
-  }
-
-  public removeDirection(index: number): void {
-    if (this.directions.length === 1) {
-      this.directions.at(0).setValue('');
-      return;
-    }
-
-    this.directions.removeAt(index);
-    this.ensureSingleEmptyDirectionRow();
-  }
-
-  public shouldShowRemoveDirection(index: number): boolean {
-    const value = `${this.directions.at(index)?.value ?? ''}`.trim();
-    return !!value;
-  }
-
-  private createIngredientControl() {
-    return this.fb.control('');
-  }
-
-  private createDirectionControl() {
-    return this.fb.control('');
-  }
-
-  private ensureSingleEmptyIngredientRow(): void {
-    const controls = this.ingredients.controls;
+  private ensureSingleEmptyRow(array: FormArray): void {
+    const controls = array.controls
 
     for (let index = controls.length - 2; index >= 0; index--) {
-      const value = `${controls[index].value ?? ''}`.trim();
-      const nextValue = `${controls[index + 1].value ?? ''}`.trim();
+      const value = `${controls[index].value ?? ''}`.trim()
+      const nextValue = `${controls[index + 1].value ?? ''}`.trim()
 
       if (!value && !nextValue) {
-        this.ingredients.removeAt(index + 1);
+        array.removeAt(index + 1)
       }
     }
 
-    const lastValue = `${this.ingredients.at(this.ingredients.length - 1)?.value ?? ''}`.trim();
+    const lastValue = `${array.at(array.length - 1)?.value ?? ''}`.trim()
     if (lastValue) {
-      this.ingredients.push(this.createIngredientControl());
+      array.push(this.createFormControl())
     }
   }
 
-  private ensureSingleEmptyDirectionRow(): void {
-    const controls = this.directions.controls;
-
-    for (let index = controls.length - 2; index >= 0; index--) {
-      const value = `${controls[index].value ?? ''}`.trim();
-      const nextValue = `${controls[index + 1].value ?? ''}`.trim();
-
-      if (!value && !nextValue) {
-        this.directions.removeAt(index + 1);
-      }
-    }
-
-    const lastValue = `${this.directions.at(this.directions.length - 1)?.value ?? ''}`.trim();
-    if (lastValue) {
-      this.directions.push(this.createDirectionControl());
-    }
+  private createFormControl(value = '') {
+    return this.fb.control(value)
   }
 
   private focusFirstInvalidControl(): void {
     const firstInvalidControl = this.elementRef.nativeElement.querySelector(
       '.ng-invalid[formControlName] input, .ng-invalid[formControlName] textarea, .ng-invalid[formControlName] .mat-mdc-select-trigger, input.ng-invalid, textarea.ng-invalid'
-    ) as HTMLElement | null;
+    ) as HTMLElement | null
 
-    firstInvalidControl?.focus();
+    firstInvalidControl?.focus()
   }
 
 }

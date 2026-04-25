@@ -32,14 +32,14 @@
                     matInput
                     [formControlName]="$index"
                     placeholder="Ex. 1 cup flour"
-                    (input)="onIngredientInput($index)">
+                    (input)="onInput(ingredients, $index)">
                 </mat-form-field>
 
-                @if (shouldShowRemoveIngredient($index)) {
+                @if (shouldRemoveControl(ingredients, $index)) {
                   <button
                     type="button"
                     class="ingredient-remove app-icon-button"
-                    (click)="removeIngredient($index)"
+                    (click)="removeControl(ingredients, $index)"
                     aria-label="Remove ingredient">
                     <mat-icon>close</mat-icon>
                   </button>
@@ -64,14 +64,14 @@
                     matInput
                     [formControlName]="$index"
                     placeholder="Ex. Mix ingredients together"
-                    (input)="onDirectionInput($index)">
+                    (input)="onInput(directions, $index)">
                 </mat-form-field>
 
-                @if (shouldShowRemoveDirection($index)) {
+                @if (shouldRemoveControl(directions, $index)) {
                   <button
                     type="button"
                     class="ingredient-remove app-icon-button"
-                    (click)="removeDirection($index)"
+                    (click)="removeControl(directions, $index)"
                     aria-label="Remove direction">
                     <mat-icon>close</mat-icon>
                   </button>

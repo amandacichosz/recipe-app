@@ -9,6 +9,7 @@ import {
   Query,
   query,
   where,
+  updateDoc,
 } from '@angular/fire/firestore';
 import { from, Observable, of, shareReplay, take, tap } from 'rxjs';
 
@@ -51,6 +52,16 @@ export class RecipesService {
         this.entityCache.clear();
       })
     )
+  }
+
+  public updateRecipe(id: string, recipe: Partial<Recipe>): Observable<any> {
+    const recipeRef = doc(this.firestore, `recipes/${id}`);
+    return from(updateDoc(recipeRef, recipe)).pipe(
+      tap(() => {
+        this.cache.clear();
+        this.entityCache.clear();
+      })
+    );
   }
 
   public getRecipeById(id: string): Observable<Recipe> {

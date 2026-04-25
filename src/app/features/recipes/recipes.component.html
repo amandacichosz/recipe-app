@@ -39,15 +39,6 @@
         <mat-icon>post_add</mat-icon>
       </button>
     </div>
-
-    <!-- <div class="menu">
-      <button class="menu-button" mat-app-icon-button [matMenuTriggerFor]="moreMenu">
-        <mat-icon fontIcon="more_horiz"></mat-icon>
-      </button>
-      <mat-menu #moreMenu="matMenu">
-        <button mat-menu-item>Add Recipe</button>
-      </mat-menu>
-    </div> -->
   </div>
 
   <div class="recipe-card-grid">
@@ -70,16 +61,6 @@
               </mat-chip-set>
             </mat-card-footer>
         </mat-card>
-        <!-- <div class="recipe-card" (click)="viewRecipe(recipe.id)">
-          <div class="recipe-content">
-            <h3 class="recipe-title">{{ recipe.name | titlecase}}</h3>
-            <div class="recipe-tags">
-              @for (tag of recipe?.tags; track tag) {
-                <span class="tag">{{ tag }}</span>
-              }
-            </div>
-          </div>
-        </div> -->
       }
       } @else {
         <div class="empty-state">

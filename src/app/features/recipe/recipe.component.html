@@ -4,18 +4,29 @@
   <span>Back</span>
 </button>
 
-<button (click)="editRecipe()" class="edit-button" mat-stroked-button>
-  <span class="edit-icon">&#9998; </span>
-  <span>Edit Recipe</span>
-</button>
-
 @if (recipe$ | async; as recipe) {
   <div class="recipe-card">
     <div class="recipe-card--border-title">RECIPES</div>
     <div class="recipe-card--border">
       <div class="recipe-card__title">
-        <span class="alt-text title-label">RECIPE:</span>
-        <h2>{{ recipe.name | titlecase}}</h2>
+        <div class="recipe-card__title-copy">
+          <span class="alt-text title-label">RECIPE:</span>
+          <h2>{{ recipe.name | titlecase}}</h2>
+        </div>
+
+        <button class="recipe-card__menu app-icon-button" [matMenuTriggerFor]="recipeMenu" aria-label="Recipe options">
+          <mat-icon>more_horiz</mat-icon>
+        </button>
+        <mat-menu #recipeMenu="matMenu">
+          <button mat-menu-item (click)="editRecipe()">
+            <mat-icon>edit</mat-icon>
+            <span>Edit Recipe</span>
+          </button>
+          <button mat-menu-item (click)="deleteRecipe()">
+            <mat-icon>delete</mat-icon>
+            <span>Delete Recipe</span>
+          </button>
+        </mat-menu>
       </div>
       <div class="recipe-card__ingredients alt-text">
         <h3>Ingredients</h3>

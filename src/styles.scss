@@ -40,7 +40,7 @@ html, body {
   background: var(--app-bg);
 
   @media (max-width: $bp-sm) {
-    --page-padding: 16px;
+    --page-padding: 16px 0;
     --container-padding: 16px;
   }
 }
@@ -48,9 +48,13 @@ body { margin: 0; }
 h2, h4 { margin: 0; }
 h3 { margin: 24px 0 16px 0; }
 
-*:focus {
+*:focus-visible {
   box-shadow: 0 0 0 4px rgba(175, 49, 49, 0.12);
   outline: 2px solid var(--mat-sys-primary);
+  &.mat-mdc-menu-item {
+    outline: 0;
+    box-shadow: none;
+  }
 }
 
 /* Custom Classes */

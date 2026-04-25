@@ -110,12 +110,8 @@ export class RecipesComponent {
     const isMobile = window.matchMedia('(max-width: 600px)').matches;
     const ref = this.dialog.open(AddEditRecipeComponent, {
       data: { title: 'Add Recipe' },
-      width: isMobile ? '100vw' : '92vw',
-      height: isMobile ? '100dvh' : '88vh',
-      maxWidth: isMobile ? '100vw' : '1100px',
-      maxHeight: isMobile ? '100dvh' : '900px',
+
     });
-    console.log('ref', ref)
   }
 
   private getRecipes(search?: string, tags?: string[]): Observable<any> {
