@@ -1,0 +1,14 @@
+<div class="cdk-dialog-container">
+  <div class="dialog-content">
+    <mat-dialog-content class="mat-typography">
+      <p>Are you sure you want to delete <strong>{{ data.name }}</strong> recipe?</p>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button (click)="onCancel()">Cancel</button>
+      <button mat-flat-button color="primary" (click)="onDelete()" cdkFocusInitial>
+        <mat-icon>delete</mat-icon>
+        Delete
+      </button>
+    </mat-dialog-actions>
+  </div>
+</div>

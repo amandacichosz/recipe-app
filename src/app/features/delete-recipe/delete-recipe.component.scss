@@ -1,0 +1,62 @@
+@use '@angular/material' as mat;
+
+:host {
+  overflow: hidden;
+  border-radius: 24px;
+  height: 100%;
+  display: block;
+}
+
+.cdk-dialog-container {
+  box-sizing: border-box;
+  border-radius: 24px;
+  padding: 24px;
+  overflow: auto;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(249, 245, 241, 0.96));
+  border: 1px solid rgba(34, 31, 28, 0.08);
+  box-shadow: var(--app-shadow);
+
+  &:focus-within {
+    box-shadow:
+      0 0 0 4px rgba(175, 49, 49, 0.12),
+      var(--app-shadow);
+  }
+
+  .dialog-content {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 0;
+  }
+
+  mat-dialog-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  mat-dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: auto;
+    gap: 4px;
+  }
+}
+
+.mat-mdc-dialog-content {
+  margin: 0 -24px;
+  padding: 0 24px;
+}
+
+@media (max-width: 600px) {
+  .cdk-dialog-container {
+    padding: 16px;
+  }
+
+  .mat-mdc-dialog-content {
+    margin: 0 -16px;
+    padding: 0 16px;
+  }
+
+}
