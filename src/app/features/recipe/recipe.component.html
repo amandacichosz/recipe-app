@@ -6,11 +6,10 @@
 
 @if (recipe$ | async; as recipe) {
   <div class="recipe-card">
-    <div class="recipe-card--border-title">RECIPES</div>
+    <div class="recipe-card--border-title">RECIPE</div>
     <div class="recipe-card--border">
       <div class="recipe-card__title">
         <div class="recipe-card__title-copy">
-          <span class="alt-text title-label">RECIPE:</span>
           <h2>{{ recipe.name | titlecase}}</h2>
         </div>
 
@@ -30,9 +29,7 @@
         <h3>Ingredients</h3>
         <ul>
           @for (ingredient of recipe.ingredients; track ingredient) {
-            <li>
-              {{ ingredient }}
-            </li>
+            <li [innerHTML]="ingredient | slashWrap"></li>
           }
         </ul>
       </div>
@@ -40,9 +37,7 @@
         <h3>Directions</h3>
         <ol>
           @for (direction of recipe.directions; track direction) {
-            <li>
-              {{ direction }}
-            </li>
+            <li [innerHTML]="direction | slashWrap"></li>
           }
         </ol>
       </div>

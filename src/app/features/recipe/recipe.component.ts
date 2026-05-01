@@ -11,11 +11,21 @@ import { SpinnerComponent } from '../../shared/spinner/spinner.component'
 import { AddEditRecipeComponent } from '../add-edit-recipe/add-edit-recipe.component'
 import { Dialog } from '@angular/cdk/dialog'
 import { DeleteRecipeComponent } from '../delete-recipe/delete-recipe.component'
+import { SlashWrapPipe } from '../../shared/pipes/slash-wrap.pipe'
 
 @Component({
   selector: 'app-recipe',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatButtonModule, MatDividerModule, MatIconModule, MatMenuModule, SpinnerComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatButtonModule,
+    MatDividerModule,
+    MatIconModule,
+    MatMenuModule,
+    SpinnerComponent,
+    SlashWrapPipe,
+  ],
   templateUrl: './recipe.component.html',
   styleUrl: './recipe.component.scss'
 })

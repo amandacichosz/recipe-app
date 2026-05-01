@@ -109,6 +109,11 @@ export class RecipesComponent {
     this.dialog.open(AddEditRecipeComponent, { data: { title: 'Add Recipe' } })
   }
 
+  public login(): void {
+    // go to login page
+    this.router.navigate(['/login'])
+  }
+
   private getRecipes(search?: string, tags?: string[]): Observable<any> {
     const searchTerm = search?.trim() || undefined
     const selectedTags = tags?.length ? tags : undefined

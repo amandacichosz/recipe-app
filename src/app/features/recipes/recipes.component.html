@@ -1,8 +1,8 @@
-<header class="recipes-header">
-  <h1 class="header-title">My Recipes</h1>
-  <p class="header-subtitle">Discover your next favorite meal</p>
-</header>
-<main>
+<div class="recipes-header">
+  <header class="recipes-title__wrapper">
+    <mat-icon svgIcon="forkfolio" class="header-icon"></mat-icon>
+    <h1 class="header-title">Forkfolio</h1>
+  </header>
   <div class="toolbar">
     <form class="search" [formGroup]="form">
       <input formControlName="query" type="text" placeholder="Search recipes..." class="search-input" />
@@ -38,8 +38,13 @@
       <button (click)="addRecipe()" class="add-recipe-btn app-icon-button" >
         <mat-icon>post_add</mat-icon>
       </button>
+      <button (click)="login()" class="app-icon-button">
+        <mat-icon>login</mat-icon>
+      </button>
     </div>
   </div>
+</div>
+<main>
 
   <div class="recipe-card-grid">
     @if (recipes$ | async; as recipes) {

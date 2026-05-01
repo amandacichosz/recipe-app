@@ -43,9 +43,13 @@ html, body {
     --page-padding: 16px 0;
     --container-padding: 16px;
   }
+
+  * {
+    box-sizing: border-box;
+  }
 }
 body { margin: 0; }
-h2, h4 { margin: 0; }
+h1, h2, h4 { margin: 0; }
 h3 { margin: 24px 0 16px 0; }
 
 *:focus-visible {
