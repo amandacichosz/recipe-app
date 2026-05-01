@@ -4,8 +4,7 @@ import { CommonModule, TitleCasePipe } from '@angular/common'
 import { MatCardModule } from '@angular/material/card'
 import { MatChipsModule } from '@angular/material/chips'
 import { FormBuilder, UntypedFormGroup, ReactiveFormsModule } from '@angular/forms'
-import { distinctUntilChanged } from 'rxjs/internal/operators/distinctUntilChanged'
-import { combineLatest, debounceTime, Observable, startWith, Subject, switchMap, takeUntil } from 'rxjs'
+import { combineLatest, debounceTime, Observable, startWith, Subject, switchMap, takeUntil, distinctUntilChanged, BehaviorSubject } from 'rxjs'
 import { SpinnerComponent } from '../../shared/spinner/spinner.component'
 import { Router } from '@angular/router'
 import { Dialog } from '@angular/cdk/dialog'
@@ -14,7 +13,6 @@ import { MatIconModule } from '@angular/material/icon'
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu'
 import { MatButtonModule } from '@angular/material/button'
 import { MatCheckboxModule } from '@angular/material/checkbox'
-import { BehaviorSubject } from 'rxjs'
 
 @Component({
   selector: 'app-recipes',

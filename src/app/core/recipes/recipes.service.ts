@@ -11,7 +11,7 @@ import {
   query,
   where,
   updateDoc,
-} from '@angular/fire/firestore'
+} from '@angular/fire/firestore/lite'
 import { from, Observable, of, shareReplay, take, tap } from 'rxjs'
 
 export interface Recipe {
