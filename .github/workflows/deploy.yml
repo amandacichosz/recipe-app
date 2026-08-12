@@ -24,9 +24,19 @@ jobs:
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile --production=false
+        env:
+          NODE_ENV: development
 
       - name: Verify Angular CLI
-        run: yarn ng version
+        run: |
+          echo "Node version:"
+          node --version
+
+          echo "Yarn version:"
+          yarn --version
+
+          echo "Angular CLI:"
+          ./node_modules/.bin/ng version
 
       - name: Build Angular app
         run: yarn build
