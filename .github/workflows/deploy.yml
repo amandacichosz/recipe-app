@@ -19,8 +19,13 @@ jobs:
           node-version: 20
           cache: yarn
 
-      - name: Enable Corepack
-        run: corepack enable
+      - name: Install Yarn 1.22.22
+        run: npm install -g yarn@1.22.22
+
+      - name: Verify Yarn
+        run: |
+          node --version
+          yarn --version
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile --production=false
@@ -29,17 +34,17 @@ jobs:
 
       - name: Verify Angular CLI
         run: |
-          echo "Node version:"
-          node --version
+          echo "Angular CLI package:"
+          yarn list --pattern @angular/cli
 
-          echo "Yarn version:"
-          yarn --version
+          echo "Angular CLI executable:"
+          ls -la node_modules/.bin/ng
 
-          echo "Angular CLI:"
+          echo "Angular CLI version:"
           ./node_modules/.bin/ng version
 
       - name: Build Angular app
-        run: yarn build
+        run: ./node_modules/.bin/ng build
 
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
