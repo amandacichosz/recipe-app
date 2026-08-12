@@ -23,7 +23,10 @@ jobs:
         run: corepack enable
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --production=false
+
+      - name: Verify Angular CLI
+        run: yarn ng version
 
       - name: Build Angular app
         run: yarn build
