@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon'
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu'
 import { MatButtonModule } from '@angular/material/button'
 import { MatCheckboxModule } from '@angular/material/checkbox'
+import { AuthService } from '../../core/auth/auth.service'
 
 @Component({
   selector: 'app-recipes',
@@ -39,7 +40,7 @@ export class RecipesComponent {
   public form: UntypedFormGroup = new UntypedFormGroup({})
   public loading = true
   public spinnerTimeout = setTimeout(() => this.loading = true, 150)
-
+  public authService = inject(AuthService)
   private fb = inject(FormBuilder)
   private recipesService = inject(RecipesService)
   private router = inject(Router)
@@ -110,6 +111,10 @@ export class RecipesComponent {
   public login(): void {
     // go to login page
     this.router.navigate(['/login'])
+  }
+
+  public logout(): void {
+    this.authService.logout()
   }
 
   private getRecipes(search?: string, tags?: string[]): Observable<any> {

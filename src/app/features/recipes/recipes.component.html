@@ -35,12 +35,19 @@
           </mat-card-actions>
         </div>
       </mat-menu>
-      <button (click)="addRecipe()" class="add-recipe-btn app-icon-button" >
-        <mat-icon>post_add</mat-icon>
-      </button>
-      <button (click)="login()" class="app-icon-button">
-        <mat-icon>login</mat-icon>
-      </button>
+        @if (authService.isLoggedIn) {
+          <button (click)="addRecipe()" class="add-recipe-btn app-icon-button" >
+            <mat-icon>post_add</mat-icon>
+          </button>
+          <button (click)="logout()" class="app-icon-button">
+            <mat-icon>logout</mat-icon>
+          </button>
+        }
+        @else {
+          <button (click)="login()" class="app-icon-button">
+            <mat-icon>login</mat-icon>
+          </button>
+        }
     </div>
   </div>
 </div>

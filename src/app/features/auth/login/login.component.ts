@@ -16,7 +16,8 @@ import { Router } from '@angular/router';
     MatInputModule,
     MatButtonModule,
     ReactiveFormsModule,
-    FormsModule],
+    FormsModule
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -37,35 +38,27 @@ export class LoginComponent {
     this.hidePassword = !this.hidePassword;
   }
 
-
   private fb = inject(FormBuilder);
   private router = inject(Router);
 
-
-    public ngOnInit(): void {
-      console.log('test')
+  public login(): void {
+    if (this.loginForm.valid) {
+      this.authService.login(this.email.value, this.password.value).subscribe({
+        next: (user) => {
+          this.router.navigate(['/recipes']);
+        },
+        error: (error) => {
+          this.errorMessage = 'Invalid email or password';
+        }
+      });
+    } else {
+      this.updateErrorMessage();
     }
-
-    public login(): void {
-      console.log('login', this.loginForm);
-      if (this.loginForm.valid) {
-        this.authService.login(this.email.value, this.password.value).subscribe({
-          next: (user) => {
-            console.log('User logged in:', user);
-            this.router.navigate(['/recipes']);
-          },
-          error: (error) => {
-            console.error('Login error:', error);
-            this.errorMessage = 'Invalid email or password';
-          }
-        });
-      } else {
-        this.updateErrorMessage();
-      }
-    }
+  }
 
 
   public updateErrorMessage(): void {
     this.errorMessage = this.loginForm.get('email')?.hasError('required') ? 'Email is required' : ''
   };
 }
+

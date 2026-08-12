@@ -61,7 +61,6 @@ export class RecipeComponent {
 
   public async editRecipe(): Promise<void> {
     const recipe = await firstValueFrom(this.recipe$);
-    console.log(recipe)
     const ref = this.dialog.open(AddEditRecipeComponent, {
       data: {
         title: 'Edit Recipe',

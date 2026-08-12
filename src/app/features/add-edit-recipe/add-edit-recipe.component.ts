@@ -72,7 +72,6 @@ export class AddEditRecipeComponent {
 
     response.subscribe({
       next: (res) => {
-        console.log('saved', res)
         this.saved.emit(params)
         this.dialogRef.close()
       },
@@ -106,7 +105,6 @@ export class AddEditRecipeComponent {
       directions: this.fb.array([...directionControls]),
       tags: [this.data.tags || []]
     })
-    console.log(this.form)
   }
 
   public shouldRemoveControl(array: FormArray, index: number): boolean {
